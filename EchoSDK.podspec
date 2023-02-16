@@ -88,7 +88,6 @@ Pod::Spec.new do |s|
     end
     plugins.subspec 'Watchdog' do |ss|
       ss.ios.source_files = 'Sources/Plugins/Watchdog/**/*'
-      ss.ios.dependency "EchoSDK/Plugins/Basic"
     end
     plugins.subspec 'Crash' do |ss|
       ss.ios.source_files = 'Sources/Plugins/Crash/**/*'
