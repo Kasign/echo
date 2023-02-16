@@ -11,7 +11,7 @@
 #import "ECOClient.h"
 #import "ECOMockGPSManager.h"
 
-#import <JZLocationConverter/JZLocationConverter.h>
+#import "JZLocationConverter.h"
 
 @implementation ECOMockGPSPlugin
 

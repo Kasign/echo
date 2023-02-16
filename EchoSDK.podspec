@@ -65,7 +65,6 @@ Pod::Spec.new do |s|
 #    end
     plugins.subspec 'MockGPS' do |ss|
       ss.ios.source_files = 'Sources/Plugins/MockGPS/**/*'
-      ss.ios.dependency "JZLocationConverter"
       ss.ios.dependency 'EchoSDK/Plugins/Basic'
     end
     plugins.subspec 'Network' do |ss|
@@ -89,7 +88,7 @@ Pod::Spec.new do |s|
     end
     plugins.subspec 'Watchdog' do |ss|
       ss.ios.source_files = 'Sources/Plugins/Watchdog/**/*'
-      ss.ios.dependency "BSBacktraceLogger"
+      ss.ios.dependency "EchoSDK/Plugins/Basic"
     end
     plugins.subspec 'Crash' do |ss|
       ss.ios.source_files = 'Sources/Plugins/Crash/**/*'
