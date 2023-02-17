@@ -41,6 +41,7 @@
 - (void)connectToClientIPAddress:(NSString *)ipAddress {
     [self.socketChannel autoConnectToClientIPAddress:ipAddress];
 }
+
 #pragma mark - 数据传输
 //发送数据
 - (void)sendPacket:(NSData *)packet
@@ -53,6 +54,7 @@
     }
     [self.socketChannel sendPacket:packet type:type extraInfo:extraInfo toDevice:device];
 }
+
 //接收数据
 - (void)device:(ECOChannelDeviceInfo *)device receivePacket:(NSData *)packet extraInfo:(NSDictionary *)extraInfo {
     if (!packet) {
@@ -60,6 +62,7 @@
     }
     !self.receivedBlock ?: self.receivedBlock(device, packet, extraInfo);
 }
+
 //发送授权数据
 - (void)sendAuthorizationMessageToDevice:(ECOChannelDeviceInfo *)device
                                     state:(ECOAuthorizeResponseType)responseType
@@ -70,12 +73,14 @@
     }
     [self.socketChannel sendAuthorizationMessageToDevice:device state:responseType showAuthAlert:showAuthAlert];
 }
+
 #pragma mark - 连接状态
 // 是否已连接到Mac客户端
 - (BOOL)isConnected {
     BOOL isSocketConnected = [_socketChannel isConnected];
     return isSocketConnected;
 }
+
 #pragma mark - ECOChannelConnectedDeviceProtocol methods
 - (void)channel:(ECOBaseChannel *)channel didConnectedToDevice:(ECOChannelDeviceInfo *)device {
     NSLog(@">> [ECOChannelManager] did Connected to device:%@", [device description]);
@@ -86,6 +91,7 @@
     //连接设备状态
     !self.deviceBlock ?: self.deviceBlock(device, YES);
 }
+
 - (void)channel:(ECOBaseChannel *)channel didDisconnectWithDevice:(ECOChannelDeviceInfo *)device {
     NSLog(@">> [ECOChannelManager] did Disconnect to device:%@", [device description]);
 //    //状态回调
@@ -95,6 +101,7 @@
     //连接设备状态
     !self.deviceBlock ?: self.deviceBlock(device, NO);
 }
+
 - (void)channel:(ECOBaseChannel *)channel didReceivedDevice:(ECOChannelDeviceInfo *)device andData:(NSData *)data extraInfo:(NSDictionary *)extraInfo{
 //    NSLog(@">> [ECOChannelManager] did Received data from device:%@", [device description]);
     [self device:device receivePacket:data extraInfo:extraInfo];
@@ -104,6 +111,7 @@
     NSLog(@">> [ECOChannelManager] device did changed authState:%@", @(isAuthed));
     !self.authStateChangedBlock ?: self.authStateChangedBlock(device, isAuthed);
 }
+
 - (void)channel:(ECOBaseChannel *)channel device:(ECOChannelDeviceInfo *)device willRequestAuthState:(BOOL)isAuthed {
     NSLog(@">> [ECOChannelManager] device will request authState:%@", @(isAuthed));
     !self.requestAuthBlock ?: self.requestAuthBlock(device, isAuthed);

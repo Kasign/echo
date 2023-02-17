@@ -94,7 +94,7 @@ NSOutlineViewDelegate>
                                       @"authed": @(0),
                                       @"list": discoverdDevices
                                       }];
-    }else{
+    } else {
         [self.devicesList addObject:@{@"title": kNoConnectedDevicesDefaultName}];
     }
     [self.outlineView reloadData];

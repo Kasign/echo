@@ -41,6 +41,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
 - (void)dealloc {
     NSLog(@"%s",__func__);
 }
+
 //初始化
 - (void)setupChannel {
     [super setupChannel];
@@ -55,6 +56,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
     [self.browser startBrowsing];
 #endif
 }
+
 //是否有socket连接
 - (BOOL)isConnected {
     BOOL v = NO;
@@ -74,6 +76,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
     [self p_unlock];
     return v;
 }
+
 //判断某个设备是否已连接
 - (BOOL)isEchoConnectedOfDevice:(ECOChannelDeviceInfo *)device {
     BOOL v = NO;
@@ -88,6 +91,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
     [self p_unlock];
     return v;
 }
+
 - (void)setupClientListenSocket {
     self.cSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     NSError *error = nil;
@@ -98,6 +102,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
         self.cSocket = nil;
     }
 }
+
 - (void)startListening {
     [self p_lock];
     [self.sockets removeAllObjects];
@@ -127,6 +132,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
         [self startListening];
     });
 }
+
 #pragma mark - Socket连接
 //Client侧连接Mac侧
 - (void)connectToAddresses:(NSArray<NSData *> *)addresses
@@ -149,6 +155,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
         NSLog(@">> [ECOSocketChannel] connect to address failed:%@", error);
     }
 }
+
 //Client侧连接Mac侧：连接到ip地址
 - (void)connectToIPAddress:(NSString *)ip {
     if (!ip || ![ip length]) {
@@ -168,6 +175,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
         NSLog(@">> [ECOSocketChannel] connect to address failed:%@", error);
     }
 }
+
 //Mac侧连接Client侧
 - (void)autoConnectToClientIPAddress:(NSString *)ipAddress {
     if (!ipAddress || ![ipAddress length]) {
@@ -185,6 +193,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
         NSLog(@">> [ECOSocketChannel] autoConnectToClientIPAddress failed:%@", error);
     }
 }
+
 #pragma mark - Socket通信
 //发送数据
 - (void)sendPacket:(NSData *)packet
@@ -231,6 +240,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
     }
     [self p_unlock];
 }
+
 //发送授权数据
 - (void)sendAuthorizationMessageToDevice:(ECOChannelDeviceInfo *)device
                                     state:(ECOAuthorizeResponseType)responseType
@@ -292,6 +302,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
 #endif
     
 }
+
 //发送设备信息
 - (void)sendDeviceInfo:(GCDAsyncSocket *)socket
               hostName:(NSString *)hostName {
@@ -313,6 +324,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
     [buffer appendBytes:[packet bytes] length:[packet length]];
     [socket writeData:buffer withTimeout:-1 tag:ECOSocketHeadTag_Device];
 }
+
 //发送给Client侧消息
 - (void)sendMacAutoConnectInfoInfo:(GCDAsyncSocket *)socket {
     ECOChannelDeviceInfo *deviceInfo = [ECOChannelDeviceInfo new];
@@ -332,6 +344,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
     [buffer appendBytes:[packet bytes] length:[packet length]];
     [socket writeData:buffer withTimeout:-1 tag:ECOSocketHeadTag_ClientListen];
 }
+
 #pragma mark - GCDAsyncSocketDelegate methods
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     //        NSLog(@"%s",__func__);
@@ -466,6 +479,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
     //读取下次发送的数据
     [sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:ECOSocketHeadTag_Data];
 }
+
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(nullable NSError *)err {
 //    NSLog(@"%s",__func__);
     [self p_lock];
@@ -487,18 +501,22 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
         [self restartListening];
     }
 }
+
 #pragma mark - helper
 - (void)p_lock {
     [_socketLock lock];
 }
+
 - (void)p_unlock {
     [_socketLock unlock];
 }
+
 - (void)saveWhiteListDevices {
     NSArray *list = [self.whitelistDevices copy];
     [[NSUserDefaults standardUserDefaults] setObject:list forKey:ECHOAuthorizedDevicesKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
+
 #pragma mark - getters
 - (NSMutableArray *)sockets {
     if (!_sockets) {
@@ -506,6 +524,7 @@ static NSString *const ECHOAuthorizedDevicesKey = @"echoAuthorizedDevicesKey";
     }
     return _sockets;
 }
+
 - (NSMutableArray *)clientSockets {
     if (!_clientSockets) {
         _clientSockets = [[NSMutableArray alloc] initWithCapacity:0];

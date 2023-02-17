@@ -18,6 +18,7 @@
 
 #pragma mark - LifeCycle methods
 + (instancetype)shared {
+    
     static ECOCoreManager *_instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -25,13 +26,17 @@
     });
     return _instance;
 }
+
 - (instancetype)init {
+    
     self = [super init];
     if (self) {
     }
     return self;
 }
+
 - (void)start {
+    
     [self stop];
     if (!_packetClient) {
         _packetClient = [[ECOPacketClient alloc] init];
@@ -58,12 +63,13 @@
         };
     }
 }
+
 - (void)stop {
+    
     self.packetClient.receivedBlock = nil;
     self.packetClient.deviceBlock = nil;
     self.packetClient.authStateChangedBlock = nil;
     self.packetClient.requestAuthBlock = nil;
-    
     self.packetClient = nil;
 }
 
@@ -73,6 +79,7 @@
                   type:(ECOPacketDataType)type
                 plugin:(__kindof ECOBasePlugin *)plugin
               toDevice:(ECOChannelDeviceInfo *)device {
+    
     //拼装数据
     NSMutableDictionary *packetDict = [NSMutableDictionary dictionary];
     [packetDict setValue:[plugin toDictionary] forKey:@"plugin"];
@@ -98,7 +105,7 @@
             NSLog(@">>[ECOCoreManager] archive packetData failed:%@", exception);
         }
         [self.packetClient sendPacket:packetData type:ECOPacketDataType_JSON extraInfo:nil plugin:plugin toDevice:device];
-    }else{
+    } else {
         if (![data isKindOfClass:[NSData class]]) {
             NSLog(@">>[ECOCoreManager] not valid NSData");
             return;
@@ -106,15 +113,17 @@
         [self.packetClient sendPacket:data type:ECOPacketDataType_Data extraInfo:packetDict plugin:plugin toDevice:device];
     }
 }
+
 //接收到数据
 - (void)device:(ECOChannelDeviceInfo *)device receivedPacketData:(NSData *)data extraInfo:(NSDictionary *)extraInfo {
+    
     if (extraInfo) {
         //普通数据
         ECOBasePlugin *plugin = [[ECOBasePlugin alloc] initWithDictionary:extraInfo[@"plugin"]];
-//        ECOPacketProjectModel *projectModel = nil;
-//        if (extraInfo[@"project"]) {
-//            projectModel = [[ECOPacketProjectModel alloc] initWithDictionary:extraInfo[@"project"]];
-//        }
+        //        ECOPacketProjectModel *projectModel = nil;
+        //        if (extraInfo[@"project"]) {
+        //            projectModel = [[ECOPacketProjectModel alloc] initWithDictionary:extraInfo[@"project"]];
+        //        }
         dispatch_async(dispatch_get_main_queue(), ^{
             [[ECOPluginsManager shared] dispatchDevice:device plugin:plugin packet:data];
         });
@@ -138,10 +147,10 @@
             return;
         }
         ECOBasePlugin *plugin = [[ECOBasePlugin alloc] initWithDictionary:jsonObject[@"plugin"]];
-//        ECOPacketProjectModel *projectModel = nil;
-//        if (jsonObject[@"project"]) {
-//            projectModel = [[ECOPacketProjectModel alloc] initWithDictionary:jsonObject[@"project"]];
-//        }
+        //        ECOPacketProjectModel *projectModel = nil;
+        //        if (jsonObject[@"project"]) {
+        //            projectModel = [[ECOPacketProjectModel alloc] initWithDictionary:jsonObject[@"project"]];
+        //        }
         id packetData = jsonObject[@"data"];
         dispatch_async(dispatch_get_main_queue(), ^{
             [[ECOPluginsManager shared] dispatchDevice:device plugin:plugin packet:packetData];
@@ -151,13 +160,15 @@
 
 //设备授权状态发生变更
 - (void)device:(ECOChannelDeviceInfo *)device didChangedAuthStatus:(BOOL)isAuthed {
+    
     [[ECOPluginsManager shared] device:device didChangedAuthState:isAuthed];
 }
 
 //发送授权数据
 - (void)sendAuthorizationMessageToDevice:(ECOChannelDeviceInfo *)device
-                                    state:(ECOAuthorizeResponseType)responseType
+                                   state:(ECOAuthorizeResponseType)responseType
                            showAuthAlert:(BOOL)showAuthAlert {
+    
     if (!device) {
         return;
     }

@@ -35,6 +35,7 @@ NSNetServiceBrowserDelegate>
     }
     return self;
 }
+
 #pragma mark - Browser Services
 //启动Bonjour服务搜索
 - (void)startBrowsing {
@@ -45,6 +46,7 @@ NSNetServiceBrowserDelegate>
     [self.serviceBrowser setDelegate:self];
     [self.serviceBrowser searchForServicesOfType:ECONetServiceType inDomain:ECONetServiceDomain];
 }
+
 //重置查找服务
 - (void)resetBrowserService {
     [self.serviceBrowser stop];
@@ -52,6 +54,7 @@ NSNetServiceBrowserDelegate>
     //重启查找
     [self startBrowsing];
 }
+
 #pragma mark - NSNetServiceBrowserDelegate methods
 
 /* Sent to the NSNetServiceBrowser instance's delegate for each service discovered. If there are more services, moreComing will be YES. If for some reason handling discovered services requires significant processing, accumulating services until moreComing is NO and then doing the processing in bulk fashion may be desirable.

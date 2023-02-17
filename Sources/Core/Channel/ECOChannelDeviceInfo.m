@@ -55,6 +55,7 @@ static NSString *_macUUIDString = nil;
 }
 
 - (id)copy {
+    
     ECOChannelDeviceInfo *deviceInfo = [ECOChannelDeviceInfo new];
     deviceInfo.hostName = self.hostName;
     deviceInfo.ipAddress = self.ipAddress;
@@ -86,6 +87,7 @@ static NSString *_macUUIDString = nil;
     }
     return self;
 }
+
 - (void)setupMacDeviceInfo {
     //uuid
     if (!_macUUIDString) {
@@ -96,6 +98,7 @@ static NSString *_macUUIDString = nil;
     self.deviceName = @"MacApp";
     self.deviceType = ECODeviceType_MacApp;
 }
+
 #if TARGET_OS_IPHONE
 - (void)setupIOSDeviceInfo {
     //设备名称
@@ -117,6 +120,7 @@ static NSString *_macUUIDString = nil;
     self.appInfo = appInfo;
 }
 #endif
+
 #pragma mark - IPAddress
 //获取本机的ip地址表
 - (NSDictionary *)getIPAddresses {

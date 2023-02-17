@@ -42,6 +42,7 @@ static const NSTimeInterval ECOUSBChannelReconnectDelay = 1.0;
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 //初始化
 - (void)setupChannel {
     [super setupChannel];
@@ -59,6 +60,7 @@ static const NSTimeInterval ECOUSBChannelReconnectDelay = 1.0;
     [self setupPTChannel];
 #endif
 }
+
 //是否有usb连接
 - (BOOL)isConnected {
 #if TARGET_OS_OSX
@@ -67,6 +69,7 @@ static const NSTimeInterval ECOUSBChannelReconnectDelay = 1.0;
     return self.peerChannel != nil;
 #endif
 }
+
 //创建channel
 - (void)setupPTChannel {
     PTChannel *channel = [PTChannel channelWithDelegate:self];
@@ -86,6 +89,7 @@ static const NSTimeInterval ECOUSBChannelReconnectDelay = 1.0;
     [center addObserver:self selector:@selector(onUSBDeviceDidAttach:) name:PTUSBDeviceDidAttachNotification object:PTUSBHub.sharedHub];
     [center addObserver:self selector:@selector(onUSBDeviceDidDetach:) name:PTUSBDeviceDidDetachNotification object:PTUSBHub.sharedHub];
 }
+
 - (void)onUSBDeviceDidAttach:(NSNotification *)note {
     NSNumber *deviceID = [note.userInfo objectForKey:@"DeviceID"];
     NSLog(@"<< [ECOUSBChannel] PTUSBDeviceDidAttachNotification:%@", deviceID);
@@ -101,6 +105,7 @@ static const NSTimeInterval ECOUSBChannelReconnectDelay = 1.0;
         }
     });
 }
+
 - (void)onUSBDeviceDidDetach:(NSNotification *)note {
     NSNumber *deviceID = [note.userInfo objectForKey:@"DeviceID"];
     NSLog(@"<< [ECOUSBChannel] PTUSBDeviceDidDetachNotification:%@", deviceID);
@@ -205,6 +210,7 @@ static const NSTimeInterval ECOUSBChannelReconnectDelay = 1.0;
         //        [self performSelector:@selector(ping) withObject:nil afterDelay:1.f];
     }];
 }
+
 - (void)sendMessage:(NSString *)message {
 #if TARGET_OS_OSX
     if (self.connectedChannel) {
@@ -226,6 +232,7 @@ static const NSTimeInterval ECOUSBChannelReconnectDelay = 1.0;
     }
 #endif
 }
+
 #pragma mark - dispatch_data_t
 static dispatch_data_t ECOUSBChannelDispatchDataWithPayload(id payload) {
     if ([payload isKindOfClass:[NSString class]]) {
@@ -247,6 +254,7 @@ static dispatch_data_t ECOUSBChannelDispatchDataWithPayload(id payload) {
     }
     return nil;
 }
+
 #pragma mark - PTChannelDelegate methods
 // Invoked to accept an incoming frame on a channel. Reply NO ignore the
 // incoming frame. If not implemented by the delegate, all frames are accepted.

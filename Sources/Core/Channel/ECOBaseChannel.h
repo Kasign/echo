@@ -26,8 +26,10 @@ typedef NS_ENUM(NSInteger, ECOChannelConnectType) {
 @optional
 //新的设备连接
 - (void)channel:(ECOBaseChannel *)channel didConnectedToDevice:(ECOChannelDeviceInfo *)device;
+
 //设备已断开
 - (void)channel:(ECOBaseChannel *)channel didDisconnectWithDevice:(ECOChannelDeviceInfo *)device;
+
 //接收到数据
 - (void)channel:(ECOBaseChannel *)channel didReceivedDevice:(ECOChannelDeviceInfo *)device andData:(NSData *)data extraInfo:(NSDictionary *)extraInfo;
 

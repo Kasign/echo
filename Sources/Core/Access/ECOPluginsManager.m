@@ -18,6 +18,7 @@
 @implementation ECOPluginsManager {
     NSRecursiveLock *_lock;
 }
+
 #pragma mark - LifeCycle
 + (instancetype)shared {
     static ECOPluginsManager *_instance = nil;
@@ -27,20 +28,25 @@
     });
     return _instance;
 }
+
 - (void)dealloc {
 
 }
+
 - (instancetype)init {
+    
     self = [super init];
     if (self) {
         _lock = [[NSRecursiveLock alloc] init];
     }
     return self;
 }
+
 #pragma mark - Public methods
 - (void)registerPlugin:(__kindof ECOBasePlugin *)plugin {
     [self p_registerPlugin:plugin];
 }
+
 - (void)clearPlugins {
     [self p_lock];
     NSEnumerator *enumerator = [self.pluginMap objectEnumerator];
@@ -52,10 +58,12 @@
     [self.pluginMap removeAllObjects];
     [self p_unlock];
 }
+
 //分发数据给对应的插件
 - (void)dispatchDevice:(ECOChannelDeviceInfo *)device
                 plugin:(__kindof ECOBasePlugin *)plugin
                 packet:(id)packetData {
+    
 #if TARGET_OS_OSX
     //Mac侧逻辑
     [self p_lock];
@@ -85,10 +93,11 @@
     }
     [self p_unlock];
 #endif
-    
 }
+
 //设备授权状态发生变更
 - (void)device:(ECOChannelDeviceInfo *)device didChangedAuthState:(BOOL)isAuthed {
+    
     [self p_lock];
     NSEnumerator *enumerator = [self.pluginMap objectEnumerator];
     __kindof ECOBasePlugin *plugin;
@@ -97,8 +106,10 @@
     }
     [self p_unlock];
 }
+
 #pragma mark - 注册插件
 - (void)p_registerPlugin:(__kindof ECOBasePlugin *)plugin {
+    
     if (!plugin || ![plugin isKindOfClass:[ECOBasePlugin class]]) {
         NSAssert(![plugin isKindOfClass:[ECOBasePlugin class]], @">>[ECOPluginManager] register plugin failed!!!");
         return;
@@ -126,6 +137,7 @@
     
     [self p_unlock];
 }
+
 #pragma mark - 数据接收+发送
 //发送数据
 - (void)plugin:(__kindof ECOBasePlugin *)plugin willSendData:(id)data type:(ECOPacketDataType)type toDevice:(ECOChannelDeviceInfo *)device {
@@ -138,15 +150,21 @@
         [[ECOCoreManager shared] sendPacketData:data type:type plugin:plugin toDevice:device];
     });
 }
+
 #pragma mark - private
 - (void)p_lock {
+    
     [_lock lock];
 }
+
 - (void)p_unlock {
+    
     [_lock unlock];
 }
+
 #pragma mark - getters
 - (NSMapTable *)pluginMap {
+    
     if (!_pluginMap) {
         _pluginMap = [NSMapTable strongToStrongObjectsMapTable];
     }
